@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
-from transformers import pipeline
-import torch
+from flask import Flask, request, jsonify # type: ignore
+from transformers import pipeline # type: ignore
+import torch # type: ignore
 import threading
 import queue
-import mysql.connector
+import mysql.connector # type: ignore
 
 app = Flask(__name__)
 
