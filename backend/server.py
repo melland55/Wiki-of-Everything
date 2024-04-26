@@ -49,7 +49,6 @@ def runLLM(messages):
         pipeline_instance.tokenizer.convert_tokens_to_ids("<|eot_id|>")
     ]
     print("running LLM")
-    print(messages)
     outputs = pipeline_instance(
         prompt,
         max_new_tokens=612,
@@ -58,7 +57,6 @@ def runLLM(messages):
         temperature=0.6,
         top_p=0.9,
     )
-    print(outputs[0]["generated_text"][len(prompt):])
     return outputs[0]["generated_text"][len(prompt):]
 
 
@@ -143,14 +141,12 @@ def get_section(word, section):
         query = "SELECT summary, section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
         cursor.execute(query, (word, section))
         rows = cursor.fetchall()
-        print(rows)
         if rows[0][2]:
             response_object = {"title": section, "content": rows[0][2]}
             return jsonify({"response": response_object})
         else:
             response = generate_section_content(word, section, rows[0][2])
             cursor.execute("UPDATE Sections SET section_content = %s WHERE section_id = %s", (response, rows[0][3]))
-            #cursor.execute("INSERT INTO Topics (topic, summary) VALUES (%s, %s)", (word, response["summary"]))
 
             conn.commit()
             return jsonify({"response": response})
