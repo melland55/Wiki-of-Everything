@@ -53,11 +53,14 @@
   flex: 1;
 }
 
-h2 {
-  margin-top: 20px;
-  font-size: 1.2em;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
+/* Custom CSS to style accordion button */
+.accordion-button:not(.collapsed) {
+  background-color: #f8f9fa; /* Change background color when accordion button is clicked */
+  color: #000; /* Change text color when accordion button is clicked */
+}
+.accordion-button {
+  background-color: #f8f9fa; /* Change background color */
+  color: #000; /* Change text color */
 }
 
 p {
