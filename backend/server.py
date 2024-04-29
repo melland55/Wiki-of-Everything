@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify # type: ignore
 from transformers import pipeline # type: ignore
+from flask_cors import CORS # type: ignore
 import torch # type: ignore
 import threading
 import queue
 import mysql.connector # type: ignore
 
+
 app = Flask(__name__)
+CORS(app)
 
 # MySQL configuration
 mysql_config = {
