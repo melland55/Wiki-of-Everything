@@ -1,17 +1,14 @@
 from flask import request, jsonify # type: ignore
-from worker import worker_thread, task_queue # type: ignore
-import mysql.connector # type: ignore
-import queue
-from database import mysql_config
+from worker import queue_task # type: ignore
+from database import db_pool
 
 def generate_summary(word):
     messages = [
         {"role": "system", "content": "You are a wikipedia bot that gives me a wiki summary of whatever I say. You will wrap any words that should link to other wiki pages with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
         {"role": "user", "content": word},
     ]
-    response_queue = queue.Queue()  # Create a queue to receive the response
-    task_queue.put((messages, response_queue))
-    response = response_queue.get()  # Wait for the response from the worker
+    
+    response = queue_task(messages)
     response_object = {"summary": "", "sections": []}
 
     # Extract everything before section titles as summary
@@ -34,9 +31,8 @@ def generate_section_content(word, section, summary):
         {"role": "system", "content": "You are a wikipedia bot that gives me a wiki section of whatever word with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages with empty <a> tags with no href."},
         {"role": "user", "content": "Word: " + word + ", Summary: " + summary + ", Section Title: " + section},
     ]
-    response_queue = queue.Queue()  # Create a queue to receive the response
-    task_queue.put((messages, response_queue))
-    response = response_queue.get()  # Wait for the response from the worker
+    
+    response = queue_task(messages)
     return response
     
 
@@ -46,7 +42,7 @@ def setup_routes(app):
     def get_summary(word):
         if request.method == 'POST':
 
-            conn = mysql.connector.connect(**mysql_config)
+            conn = db_pool.get_connection()
             cursor = conn.cursor()
 
             query = "SELECT summary, section_title, section_content,section_order  FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s"
@@ -77,7 +73,7 @@ def setup_routes(app):
     @app.route('/<word>/get-section/<section>', methods=['POST'])
     def get_section(word, section):
         if request.method == 'POST':
-            conn = mysql.connector.connect(**mysql_config)
+            conn = db_pool.get_connection()
             cursor = conn.cursor()
 
             query = "SELECT summary, section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
