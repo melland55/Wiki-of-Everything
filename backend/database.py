@@ -12,6 +12,6 @@ mysql_config = {
 # Create a connection pool
 db_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="my_pool",
-    pool_size=5,  # Adjust the pool size as needed
+    pool_size=10,  # Adjust the pool size as needed
     **mysql_config
 )
