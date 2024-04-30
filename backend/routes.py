@@ -4,7 +4,7 @@ from database import db_pool
 
 def generate_summary(word):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me a wiki summary of whatever I say. You will wrap any words that should link to other wiki pages with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
+        {"role": "system", "content": "You are a wikipedia bot that gives me a wiki summary of whatever I say. You will wrap any words that should link to other wiki pages except the topic word with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
         {"role": "user", "content": word},
     ]
     
@@ -22,7 +22,7 @@ def generate_summary(word):
     section_titles_start = response.find("**Section titles:**\n") + len("**Section titles:**")
     section_titles = response[section_titles_start:].strip().split("* ")[1:]
     
-    exclude_title = ["References","External links", "See more"]
+    exclude_title = ["References","External links", "See more", "See also"]
 
     # Create sections with empty content
     for title in section_titles:
@@ -33,12 +33,18 @@ def generate_summary(word):
 
 def generate_section_content(word, section, summary):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me a wiki section of whatever word with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages with empty <a> tags with no href."},
+        {"role": "system", "content": "You are a wikipedia bot that gives me just a wiki section of whatever **word** with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages except the topic word with empty <a> tags with no href."},
         {"role": "user", "content": "Word: " + word + ", Summary: " + summary + ", Section Title: " + section},
     ]
     
     response = queue_task(messages)
-    return response
+    print(response)
+    content_start = response.find("**"+ section +"**")
+    if content_start != -1:
+        content_start += len("**" + section + "**")
+        return response[content_start:].strip()
+    else:
+        return response
     
 def setup_routes(app):
     @app.route('/get-summary/<word>', methods=['POST'])

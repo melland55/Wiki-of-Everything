@@ -6,38 +6,43 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css';
 
+function modifyATags(inputString) {
+  // Define the regex pattern to match <a> tags with any content inside
+  const regex = /<a>(.*?)<\/a>/g;
+  const baseUrl = window.location.origin;
+  // Use the replace function to replace the matched pattern with the desired format
+  const modifiedString = inputString.replace(regex, `<a href="${baseUrl}/$1">$1</a>`);
+
+  return modifiedString;
+}
+
+function capitalizeString(inputString) {
+  // Define an array of words to exclude from capitalization
+  const excludedWords = ['of', 'the', 'for', 'in', 'and', 'or', 'but', 'with'];
+
+  // Split the input string into an array of words
+  const words = inputString.split(/\s+/);
+
+  // Capitalize the first letter of each word, except for excluded words
+  const capitalizedWords = words.map((word, index) => {
+    if (index === 0 || !excludedWords.includes(word.toLowerCase())) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    } else {
+      return word.toLowerCase(); // Keep excluded words in lowercase
+    }
+  });
+
+  // Join the capitalized words back into a string
+  return capitalizedWords.join(' ');
+}
+
 function App() {
   const [summary, setSummary] = useState('');
   const [sections, setSections] = useState([]);
 
   const { topic } = useParams();
 
-  const handleAccordionOpen = async (index) => {
-    const section = sections[index];
-    if (!section.content && !section.loading) {
-      try {
-        // Set loading state for the section
-        setSections(prevSections => {
-          const updatedSections = [...prevSections];
-          updatedSections[index] = { ...section, loading: true };
-          return updatedSections;
-        });
-
-        // Make API call
-        const response = await axios.post('http://127.0.0.1:5000/'+topic+'/get-section/'+section.title);
-        console.log(response)
-        const responseContent = response.data.response; // Extract section content from API response
-
-        setSections(prevSections => {
-          const updatedSections = [...prevSections];
-          updatedSections[index] = { ...section, content: responseContent, loading: false };
-          return updatedSections;
-        });
-      } catch (error) {
-        // Optionally handle error state
-      }
-    }
-  };
+  
   
   // useEffect to call API on page load
   useEffect(() => {
@@ -103,13 +108,13 @@ function App() {
           )}
         </div>
         <div className="main-content">
-          <h1>{topic}</h1>
-          <p>{summary}</p>
+          <h1>{capitalizeString(topic)}</h1>
+          <p dangerouslySetInnerHTML={{ __html: modifyATags(summary) }} />
 
           {sections.length > 0 ? (
-            <div className="accordion">
+            <div className="accordion accordion-flush">
               {sections.map((section, index) => (
-                <AccordionItem key={index} section={section} index={index} handleAccordionOpen={handleAccordionOpen} />
+                <AccordionItem key={index} topic={topic} section_prop={section} index={index} />
               ))}
             </div>
           ) : (
