@@ -19,7 +19,7 @@ function App() {
     const fetchData = async () => {
       try {
         // Make API call using axios (replace 'apiEndpoint' with your actual API endpoint)
-        const response = await axios.post('http://127.0.0.1:5000/get-summary/'+topic);
+        const response = await axios.post('/api/get-summary/'+topic);
         const responseData = response.data.response; // Extract response data
         setSummary(responseData.summary); // Set summary state
         setSections(responseData.sections); // Set sections state

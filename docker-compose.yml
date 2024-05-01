@@ -27,8 +27,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    networks:
-      - backend_network
 
   database:
     image: mysql/mysql-server # Use the latest MySQL Docker image
@@ -41,8 +39,14 @@ services:
       - "3306:3306" # Forward port 3306 for MySQL
     volumes:
       - ./backend/sql/INIT.SQL:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - backend_network
-networks:
-  backend_network:
-    driver: bridge
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # Mount custom nginx configuration
+    ports:
+      - "80:80" # Forward port 80 for HTTP
+    depends_on:
+      - frontend
+      - backend
+    restart: on-failure
