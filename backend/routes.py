@@ -4,7 +4,7 @@ from database import db_pool
 
 def generate_summary(word):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me a wiki summary of whatever I say. You will wrap any words that should link to other wiki pages except the topic word with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
+        {"role": "system", "content": "You are a wikipedia bot that gives me a detailed wiki summary of whatever I say. You will wrap any words that should link to other wiki pages except the topic word with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
         {"role": "user", "content": word},
     ]
     
@@ -22,18 +22,18 @@ def generate_summary(word):
     section_titles_start = response.find("**Section titles:**\n") + len("**Section titles:**")
     section_titles = response[section_titles_start:].strip().split("* ")[1:]
     
-    exclude_title = ["References","External links", "See more", "See also"]
+    exclude_title = ["references","external links", "see more", "see also"]
 
     # Create sections with empty content
     for title in section_titles:
-        if title not in exclude_title:
+        if title.lower() not in exclude_title:
             response_object["sections"].append({"title": title.strip(), "content": ""})
         
     return response_object
 
 def generate_section_content(word, section, summary):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me just a wiki section of whatever **word** with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages except the topic word with empty <a> tags with no href."},
+        {"role": "system", "content": "You are a wikipedia bot that gives me just a detailed wiki section of whatever **word** with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages with empty <a> tags with no href."},
         {"role": "user", "content": "Word: " + word + ", Summary: " + summary + ", Section Title: " + section},
     ]
     
