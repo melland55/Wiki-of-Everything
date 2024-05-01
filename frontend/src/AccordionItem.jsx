@@ -1,16 +1,8 @@
 // AccordionItem.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { modifyATags } from './utils';
 
-function modifyATags(inputString) {
-  // Define the regex pattern to match <a> tags with any content inside
-  const regex = /<a>(.*?)<\/a>/g;
-  const baseUrl = window.location.origin;
-  // Use the replace function to replace the matched pattern with the desired format
-  const modifiedString = inputString.replace(regex, `<a href="${baseUrl}/$1">$1</a>`);
-
-  return modifiedString;
-}
 
 function AccordionItem({ topic, section_prop, index}) {
 
