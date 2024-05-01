@@ -1,0 +1,6 @@
+flask
+flask_cors
+mysql-connector-python
+transformers
+torch
+huggingface_hub

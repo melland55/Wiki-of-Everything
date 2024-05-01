@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.react
+    ports:
+      - "3000:3000" # Forward port 3000 for the React development server
+    depends_on:
+      - backend
+    env_file: backend/.env
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.python
+    ports:
+      - "5000:5000" # Forward port 5000 for the Flask server
+    depends_on:
+      - database
+    env_file: backend/.env
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - backend_network
+
+  database:
+    image: mysql/mysql-server # Use the latest MySQL Docker image
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Set the root password for MySQL
+      MYSQL_DATABASE: WikiOfEverything # Set the name of your database
+      MYSQL_USER: melland5 # Set the username for your database
+      MYSQL_PASSWORD: Codmod3! # Set the password for your database user
+    ports:
+      - "3306:3306" # Forward port 3306 for MySQL
+    volumes:
+      - ./backend/sql/INIT.SQL:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend_network
+networks:
+  backend_network:
+    driver: bridge

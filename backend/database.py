@@ -1,12 +1,13 @@
 import mysql.connector # type: ignore
 import mysql.connector.pooling # type: ignore
+import os
 
 # MySQL configuration
 mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'root',
-    'database': 'WikiOfEverything'
+    'host': os.getenv('MYSQL_HOST'),
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'database': os.getenv('MYSQL_DATABASE')
 }
 
 # Create a connection pool
