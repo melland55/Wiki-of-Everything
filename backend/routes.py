@@ -1,10 +1,10 @@
 from flask import request, jsonify # type: ignore
-from worker import queue_task
 from database import db_pool
+from worker import queue_task
 
 def generate_summary(word):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me a detailed wiki summary of whatever I say. You will wrap any words that should link to other wiki pages except the topic word with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have."},
+        {"role": "system", "content": "You are a wikipedia bot that gives me a detailed wiki summary of whatever I say. You will wrap any words that should link to other wiki pages except the topic word with empty <a> tags with no href. End the response with just a list of **Section titles:** that a wiki would normally have. Make sure to wrap multiple topics with <a> tags."},
         {"role": "user", "content": word},
     ]
     
@@ -15,7 +15,7 @@ def generate_summary(word):
 
     # Extract everything before section titles as summary
     summary_end = response.find("**Section titles:**")
-    summary = response[:summary_end].strip()
+    summary = response[:summary_end]
     response_object["summary"] = summary # Remove leading/trailing whitespace
     
     # Extract section titles
@@ -99,5 +99,19 @@ def setup_routes(app):
 
                         conn.commit()
                         return jsonify({"response": response})
+        else:
+            return jsonify({'error': 'Invalid request method'})
+        
+    @app.route('/get-topics', methods=['GET'])
+    def get_topics():
+        if request.method == 'GET':
+            with db_pool.get_connection() as conn:
+                with conn.cursor() as cursor:
+
+                    query = "SELECT topic FROM Topics"
+                    cursor.execute(query)
+                    rows = cursor.fetchall()
+                    
+                    return jsonify({"response": rows})
         else:
             return jsonify({'error': 'Invalid request method'})
