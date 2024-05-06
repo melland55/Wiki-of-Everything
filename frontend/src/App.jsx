@@ -42,7 +42,7 @@ function App() {
     <div className="wiki-page">
       <header className="custom-header">
         <div className="logo-container">
-          <img src="your-logo.png" alt="Your Logo" />
+          <img src="/Wiki-Logo.svg" alt="Your Logo" style={{ width: '64px', height: 'auto' }}/>
         </div>
         <div className="navigation-container">
             <SearchBar items={topics}/>
