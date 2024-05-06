@@ -10,7 +10,8 @@ services:
     depends_on:
       - backend
     env_file: backend/.env
-
+    volumes:
+      - ./frontend:/frontend
   backend:
     build:
       context: ./backend
@@ -27,14 +28,14 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    volumes:
+      - ./backend:/backend
 
   database:
     image: mysql/mysql-server # Use the latest MySQL Docker image
     environment:
       MYSQL_ROOT_PASSWORD: root # Set the root password for MySQL
       MYSQL_DATABASE: WikiOfEverything # Set the name of your database
-      MYSQL_USER: melland5 # Set the username for your database
-      MYSQL_PASSWORD: Codmod3! # Set the password for your database user
     ports:
       - "3306:3306" # Forward port 3306 for MySQL
     volumes:
