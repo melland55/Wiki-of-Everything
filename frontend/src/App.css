@@ -84,6 +84,7 @@
 .main-content {
   padding: 20px;
   flex: 1;
+  margin-bottom: 100vh;
 }
 
 /* Accordion Styles */
@@ -124,9 +125,25 @@
 h1 {
   font-size: 48px; /* Fixed font size */
   font-family: "Times New Roman", Times, serif;
+  padding: none;
 }
 
 h2 {
   font-size: 30px; /* Fixed font size */
   font-family: "Times New Roman", Times, serif;
+}
+
+.sidebar-content {
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-title {
+  vertical-align: bottom;
+  display: table-cell;
+  height: 56px;
+}
+
+.main-content-title {
+  height: 56px;
 }
