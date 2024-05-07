@@ -13,14 +13,49 @@ function App() {
   const [summary, setSummary] = useState(''); //For Topic summary
   const [sections, setSections] = useState([]); //For section titles and contents
   const [topics, setTopics] = useState([]); //For Search bar results
+  const [isControlled, setIsControlled] = useState([]); //For Search bar results
   const { topic } = useParams(); //For Topic of current page
   const sectionRefs = useRef([]); //Ref to scroll to sections
 
   const scrollToItem = (index) => {
     if (sectionRefs.current[index]) {
       sectionRefs.current[index].scrollIntoView({ behavior: 'smooth'});
+      setIsControlled(prevState => {
+        const newState = [...prevState];
+        newState[index] = true;
+        return newState;
+      });
     }
   };
+
+  const snapToItem = (index) => {
+    if (sectionRefs.current[index]) {
+      sectionRefs.current[index].scrollIntoView();
+      setIsControlled(prevState => {
+        const newState = [...prevState];
+        newState[index] = true;
+        return newState;
+      });
+    }
+  };
+
+  const handleLinkClick = (title) => {
+    if(window.location.hash.substring(1).replace(/%20/g, ' ') === title){
+      const hash = window.location.hash;
+      const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
+      let index = -1;
+      sections.forEach((section, idx) => {
+        if (section.title.toLowerCase() == hashtag.toLowerCase()) {
+          index = idx;
+          return;
+        }
+      });
+      scrollToItem(index); // Scroll to the appropriate section
+    }else{
+      window.location.hash = `#${title}`; // Update the URL hash
+    }
+  };
+  
 
   useEffect(() => {
     sectionRefs.current = Array(sections.length).fill(null).map((_, index) => sectionRefs.current[index]);
@@ -58,6 +93,23 @@ function App() {
       });
       scrollToItem(index)
     };
+
+    const handleHashReload = () => {
+      const hash = window.location.hash;
+      if(hash){
+        const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
+        let index = -1;
+        sections.forEach((section, idx) => {
+          if (section.title.toLowerCase() === hashtag.toLowerCase()) {
+            index = idx;
+            return;
+          }
+        });
+        snapToItem(index)
+      }
+    };
+
+    handleHashReload();
     window.addEventListener('hashchange', handleHashChange);
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
@@ -86,7 +138,7 @@ function App() {
               <ul>
                 {sections.map((section, index) => (
                   <li key={index}>
-                    <a href={`#${section.title}`}>{section.title}</a>
+                    <a onClick={() => handleLinkClick(section.title)}>{section.title}</a>
                   </li>
                 ))}
               </ul>
@@ -105,7 +157,7 @@ function App() {
             <div className="accordion accordion-flush">
               {sections.map((section, index) => (
                 <div key={index} ref={(ref) => (sectionRefs.current[index] = ref)}>
-                  <AccordionItem topic={topic} section_prop={section} index={index} />
+                  <AccordionItem topic={topic} section_prop={section} index={index} isScrolledTo={isControlled[index]}/>
                 </div>
               ))}
             </div>
