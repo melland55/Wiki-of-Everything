@@ -34,7 +34,7 @@ function App() {
     return () => {
 
     };
-  }, []);
+  }, [topic]);
 
   
 
@@ -42,7 +42,9 @@ function App() {
     <div className="wiki-page">
       <header className="custom-header">
         <div className="logo-container">
-          <img src="/Wiki-Logo.svg" alt="Your Logo" style={{ width: '64px', height: 'auto' }}/>
+          <a href="/">
+            <img src="/Wiki-Logo.svg" alt="Your Logo" style={{ width: '64px', height: 'auto' }}/>
+          </a>
         </div>
         <div className="navigation-container">
             <SearchBar items={topics}/>
