@@ -5,6 +5,14 @@ export function modifyATags(inputString) {
     return modifiedString;
 }
 
+export function addBulletPoints(inputString) {
+    const regex = /\* /g;
+    const modifiedString = inputString.replace(regex, '<br>&nbsp;&nbsp;&nbsp;&nbsp;&bull; ');
+    
+    return modifiedString;
+}
+
+
 export function capitalizeString(inputString) {
 const excludedWords = ['of', 'the', 'for', 'in', 'and', 'or', 'but', 'with'];
 const words = inputString.split(/\s+/);

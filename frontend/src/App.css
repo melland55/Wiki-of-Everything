@@ -1,3 +1,4 @@
+/* Base Styles */
 .wiki-page {
   font-family: Arial, sans-serif;
   margin: 0 auto;
@@ -5,72 +6,19 @@
   max-width: 1000px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  padding: 15px 20px;
-  border-bottom: 1px solid #ddd;
-}
-
-.content {
-  display: flex;
-  border-bottom: 0px;
-}
-
-.sidebar {
-  width: 20%;
-  padding-top: 20px;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin-bottom: 10px;
-}
-
-.sidebar a {
-  text-decoration: none;
-  color: black;
-}
-
-.main-content {
-  padding: 20px;
-  flex: 1;
-}
-
-/* Custom CSS to style accordion button */
-.accordion-button:not(.collapsed) {
-  background-color: #f8f9fa; /* Change background color when accordion button is clicked */
-  color: #000; /* Change text color when accordion button is clicked */
-}
-.accordion-button {
-  background-color: #f8f9fa; /* Change background color */
-  color: #000; /* Change text color */
-}
-
-p {
-  line-height: 1.5;
-  margin-top: 10px;
-}
-
+/* Header Styles */
 .custom-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
-  padding: 15px 20px;
+  padding: 10px 10px;
   border-bottom: 1px solid #ddd;
 }
 
 .logo-container {
   flex-grow: 0;
+  margin-right: 40px;
 }
 
 .navigation-container {
@@ -82,13 +30,15 @@ p {
   margin-right: 20px;
 }
 
-.main-menu ul {
+.main-menu ul,
+.user-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.main-menu li {
+.main-menu li,
+.user-menu li {
   display: inline-block;
   margin-right: 15px;
 }
@@ -100,33 +50,109 @@ p {
   border-radius: 3px;
 }
 
-.user-menu {
+/* Sidebar Styles */
+.content {
   display: flex;
+  border-bottom: 0;
+}
+
+.sidebar {
+  width: 140px;
+  padding: 20px 10px;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  padding-left: 10px;
 }
 
-.user-menu li {
-  margin-left: 10px;
+.sidebar li {
+  margin-bottom: none;
+  padding: none;
+  height: 20px;
+  height: auto;
 }
 
+.sidebar a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Remove Underline from Links Rendered with dangerouslySetInnerHTML */
+.main-content a {
+  text-decoration: none;
+}
+
+/* Main Content Styles */
+.main-content {
+  padding: 20px;
+  flex: 1;
+  margin-bottom: 100vh;
+}
+
+/* Accordion Styles */
 .accordion {
-  border-radius: 0px;
-  --bs-border-width: 0px;
-  padding: 0px;
+  border-radius: 0;
+  --bs-border-width: 0;
+  padding: 0;
 }
 
 .accordion-body {
-  padding: 0px;
+  padding: 0;
 }
 
 .accordion-header {
-  padding: 0px;
-  border-bottom: 1px solid #dee2e6;
+  padding: 0;
+  border-bottom: 1px solid #AAA;
 }
 
 .accordion-button {
   font-size: 1.5rem;
-  padding-left: 0px;
+  padding-left: 0;
+}
+
+/* Custom Accordion Button Styles */
+.accordion-button:not(.collapsed) {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Hide Sidebar on Small Screens */
+@media screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+/* Fixed Font Sizes for Titles */
+h1 {
+  font-size: 48px; /* Fixed font size */
+  font-family: "Times New Roman", Times, serif;
+  padding: none;
+}
+
+h2 {
+  font-size: 30px; /* Fixed font size */
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+}
+
+.sidebar-content {
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-title {
+  vertical-align: bottom;
+  display: table-cell;
+  border-bottom: 1px solid #ddd;
+}
+
+.accordion-button:focus,
+.accordion-button:active {
+  /* Remove the styles causing the light blue highlighting */
+  outline: none;
+  box-shadow: none;
 }

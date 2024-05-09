@@ -4,10 +4,11 @@ import os
 
 # MySQL configuration
 mysql_config = {
-    'host': os.getenv('MYSQL_HOST'),
-    'user': os.getenv('MYSQL_USER'),
-    'password': os.getenv('MYSQL_PASSWORD'),
-    'database': os.getenv('MYSQL_DATABASE')
+    #'host': os.getenv('MYSQL_HOST'),
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'root',
+    'database': 'WikiOfEverything'
 }
 
 # Create a connection pool
