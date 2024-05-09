@@ -9,10 +9,18 @@ const SearchBar = ({ items }) => {
   const filteredItems = items.filter(item =>
     item.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleSubmit = e => {
+    e.preventDefault(); // Prevent default form submission behavior
+    // Construct the URL with the search term
+    const url = `${window.location.origin}/${encodeURIComponent(searchTerm)}`;
+    // Navigate to the URL
+    window.location.href = url;
+  };
   
   return (
     <div style={{ position: 'relative' }}>
-      <Form onClick={() => setIsClicked(true)}>
+      <Form onClick={() => setIsClicked(true)} onSubmit={handleSubmit}>
         <FormControl
           type="text"
           placeholder="Search..."
@@ -32,7 +40,8 @@ const SearchBar = ({ items }) => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           width: '100%',
           maxHeight: '200px',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          backgroundColor: 'transparent'
         }}>
           <ListGroup>
             {filteredItems.map((item, index) => (
