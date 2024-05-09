@@ -72,6 +72,7 @@
   margin-bottom: none;
   padding: none;
   height: 20px;
+  height: auto;
 }
 
 .sidebar a {
@@ -147,4 +148,11 @@ h2 {
   vertical-align: bottom;
   display: table-cell;
   border-bottom: 1px solid #ddd;
+}
+
+.accordion-button:focus,
+.accordion-button:active {
+  /* Remove the styles causing the light blue highlighting */
+  outline: none;
+  box-shadow: none;
 }

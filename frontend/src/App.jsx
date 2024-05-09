@@ -183,7 +183,19 @@ function App() {
               <ul>
                 {sections.map((section, index) => (
                   <li key={index} className='content-link'>
-                    <button onClick={() => handleLinkClick(section.title)} style={{ color: activeSection === index ? 'black' : 'rgb(13, 110, 253)', cursor: 'pointer', fontSize: '10px', margin:'none', border:'none', backgroundColor:'white'}}>
+                    <button 
+                      onClick={() => handleLinkClick(section.title)} 
+                      style={{
+                        color: activeSection === index ? 'black' : 'rgb(13, 110, 253)',
+                        cursor: 'pointer', 
+                        fontSize: '10px', 
+                        margin: '0px', 
+                        border: 'none', 
+                        backgroundColor: 'transparent', // Set background color to transparent
+                        padding: '0', // Remove padding
+                        textAlign: 'left',
+                      }}
+                    >
                       {section.title}
                     </button>
                   </li>
