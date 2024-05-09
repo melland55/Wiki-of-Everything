@@ -18,6 +18,7 @@
 
 .logo-container {
   flex-grow: 0;
+  margin-right: 40px;
 }
 
 .navigation-container {
@@ -64,10 +65,13 @@
 .sidebar ul {
   list-style: none;
   padding: 0;
+  padding-left: 10px;
 }
 
 .sidebar li {
-  margin-bottom: 10px;
+  margin-bottom: none;
+  padding: none;
+  height: 20px;
 }
 
 .sidebar a {
@@ -131,6 +135,7 @@ h1 {
 h2 {
   font-size: 30px; /* Fixed font size */
   font-family: "Times New Roman", Times, serif;
+  margin: 0;
 }
 
 .sidebar-content {
@@ -141,9 +146,5 @@ h2 {
 .sidebar-title {
   vertical-align: bottom;
   display: table-cell;
-  height: 56px;
-}
-
-.main-content-title {
-  height: 56px;
+  border-bottom: 1px solid #ddd;
 }

@@ -16,6 +16,47 @@ function App() {
   const [isControlled, setIsControlled] = useState([]); //For Search bar results
   const { topic } = useParams(); //For Topic of current page
   const sectionRefs = useRef([]); //Ref to scroll to sections
+  const summaryRef = useRef(null);
+  const [activeSection, setActiveSection] = useState(null);
+
+  const handleScroll = () => {
+    if (sectionRefs.current.length === 0) {
+      setActiveSection(-1);
+      return; // No sections to handle
+    }
+  
+    const sectionTops = sectionRefs.current.map(ref => {
+      return {
+        section: ref,
+        top: ref.getBoundingClientRect().top
+      };
+    });
+  
+    
+    // Find the section closest to the top of the viewport
+    const closestSection = sectionTops.reduce((prev, curr) => {
+      return Math.abs(curr.top) < Math.abs(prev.top) ? curr : prev;
+    });
+  
+    const index = sectionRefs.current.findIndex(ref => ref.getBoundingClientRect().top === closestSection.top);
+    console.log("Active Index:", index);
+    setActiveSection(index);
+  };
+  
+
+  useEffect(() => {
+    // Attach scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Initial check on mount
+    handleScroll();
+
+    return () => {
+      // Remove scroll event listener on unmount
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [sections]);
+
 
   const scrollToItem = (index) => {
     if (sectionRefs.current[index]) {
@@ -102,10 +143,10 @@ function App() {
         sections.forEach((section, idx) => {
           if (section.title.toLowerCase() === hashtag.toLowerCase()) {
             index = idx;
+            snapToItem(index)
             return;
           }
         });
-        snapToItem(index)
       }
     };
 
@@ -132,13 +173,20 @@ function App() {
         <div className="sidebar">
           <div className="sidebar-content">
             <div className="sidebar-title">
-              <h2>Contents</h2>
+              <h2 className="sidebar-title-text" onClick={() => {
+                window.location.hash = ''; // Remove hash from URL
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top
+              }}>
+                Contents
+              </h2>
             </div>
             {sections.length > 0 ? (
               <ul>
                 {sections.map((section, index) => (
-                  <li key={index}>
-                    <a onClick={() => handleLinkClick(section.title)}>{section.title}</a>
+                  <li key={index} className='content-link'>
+                    <a onClick={() => handleLinkClick(section.title)} style={{ color: activeSection === index ? 'black' : 'rgb(13, 110, 253)', cursor: 'pointer', fontSize: '10px', margin:'none'}}>
+                      {section.title}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -149,7 +197,7 @@ function App() {
         </div>
         <div className="main-content">
           <div className="main-content-title">
-            <h1>{capitalizeString(topic)}</h1>
+            <h1 className="main-title-text">{capitalizeString(topic)}</h1>
           </div>
           <p dangerouslySetInnerHTML={{ __html: addBulletPoints(modifyATags(summary)) }} />
 
