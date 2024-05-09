@@ -14,6 +14,7 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
         buttonRef.current.click();
       }
     }
+    // eslint-disable-next-line
   }, [isScrolledTo]);
 
   const handleAccordionOpen = async () => {

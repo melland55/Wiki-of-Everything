@@ -16,7 +16,6 @@ function App() {
   const [isControlled, setIsControlled] = useState([]); //For Search bar results
   const { topic } = useParams(); //For Topic of current page
   const sectionRefs = useRef([]); //Ref to scroll to sections
-  const summaryRef = useRef(null);
   const [activeSection, setActiveSection] = useState(null);
 
   const handleScroll = () => {
@@ -86,7 +85,7 @@ function App() {
       const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
       let index = -1;
       sections.forEach((section, idx) => {
-        if (section.title.toLowerCase() == hashtag.toLowerCase()) {
+        if (section.title.toLowerCase() === hashtag.toLowerCase()) {
           index = idx;
           return;
         }
@@ -184,9 +183,9 @@ function App() {
               <ul>
                 {sections.map((section, index) => (
                   <li key={index} className='content-link'>
-                    <a onClick={() => handleLinkClick(section.title)} style={{ color: activeSection === index ? 'black' : 'rgb(13, 110, 253)', cursor: 'pointer', fontSize: '10px', margin:'none'}}>
+                    <button onClick={() => handleLinkClick(section.title)} style={{ color: activeSection === index ? 'black' : 'rgb(13, 110, 253)', cursor: 'pointer', fontSize: '10px', margin:'none', border:'none', backgroundColor:'white'}}>
                       {section.title}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
