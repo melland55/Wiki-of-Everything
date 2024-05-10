@@ -1,6 +1,6 @@
 from flask import request, jsonify # type: ignore
-from database import db_pool
 from worker import queue_task
+from database import db_pool
 
 def generate_summary(word):
     messages = [

@@ -5,7 +5,7 @@ import os
 # MySQL configuration
 mysql_config = {
     #'host': os.getenv('MYSQL_HOST'),
-    'host': 'localhost',
+    'host': 'host.docker.internal',
     'user': 'root',
     'password': 'root',
     'database': 'WikiOfEverything'
