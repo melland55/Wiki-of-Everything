@@ -38,7 +38,6 @@ function App() {
     });
   
     const index = sectionRefs.current.findIndex(ref => ref.getBoundingClientRect().top === closestSection.top);
-    console.log("Active Index:", index);
     setActiveSection(index);
   };
   
@@ -104,9 +103,9 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const topics_response = await axios.get('http://127.0.0.1:5000/get-topics');
+        const topics_response = await axios.get(window.location.origin+'/api/get-topics');
         setTopics(topics_response.data.response.flatMap(topicArr => topicArr));
-        const summary_response = await axios.post('http://127.0.0.1:5000/get-summary/'+topic);
+        const summary_response = await axios.post(window.location.origin+'/api/get-summary/'+topic);
         const summary_responseData = summary_response.data.response;
         setSummary(summary_responseData.summary);
         setSections(summary_responseData.sections);

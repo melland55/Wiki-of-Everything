@@ -6,7 +6,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.react
     ports:
-      - "3000:3000" # Forward port 3000 for the React development server
+      - "80:80" # Forward port 80 for the nginx server
     depends_on:
       - backend
     env_file: backend/.env
@@ -44,13 +44,3 @@ services:
     volumes:
       - ./backend/sql/INIT.SQL:/docker-entrypoint-initdb.d/init.sql
     command: ['mysqld', '--bind-address=0.0.0.0']
-
-  nginx:
-    image: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf # Mount custom nginx configuration
-    ports:
-      - "80:80" # Forward port 80 for HTTP
-    depends_on:
-      - frontend
-    restart: on-failure
