@@ -152,3 +152,29 @@ def setup_routes(app):
                     return jsonify({"response": rows})
         else:
             return jsonify({'error': 'Invalid request method'})
+        
+    @app.route('/get-graph', methods=['GET'])
+    def get_graph():
+        if request.method == 'GET':
+            with db_pool.get_connection() as conn:
+                with conn.cursor() as cursor:
+
+                    query = "SELECT topic_id, topic, link_count FROM Topics"
+                    cursor.execute(query)
+                    rows = cursor.fetchall()
+
+                    response_object = {"nodes": [], "links":[]}
+                    for row in rows:
+                        response_object["nodes"].append({"id": row[0], "name": row[1], "val": row[2], "label": row[1]})
+
+
+                    query = "SELECT source_id, destination_id FROM Links"
+                    cursor.execute(query)
+                    rows = cursor.fetchall()
+
+                    for row in rows:
+                        response_object["links"].append({"source": row[0], "target": row[1]})
+                    
+                    return jsonify({"response": response_object})
+        else:
+            return jsonify({'error': 'Invalid request method'})
