@@ -18,6 +18,8 @@ function App() {
   const sectionRefs = useRef([]); //Ref to scroll to sections
   const [activeSection, setActiveSection] = useState(null);
 
+  const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
+
   const handleScroll = () => {
     if (sectionRefs.current.length === 0) {
       setActiveSection(-1);
@@ -103,9 +105,9 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const topics_response = await axios.get(window.location.origin+'/api/get-topics');
+        const topics_response = await axios.get(apiEndpoint+'get-topics');
         setTopics(topics_response.data.response.flatMap(topicArr => topicArr));
-        const summary_response = await axios.post(window.location.origin+'/api/get-summary/'+topic);
+        const summary_response = await axios.post(apiEndpoint+'get-summary/'+topic);
         const summary_responseData = summary_response.data.response;
         setSummary(summary_responseData.summary);
         setSections(summary_responseData.sections);
