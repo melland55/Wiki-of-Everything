@@ -1,6 +1,35 @@
 from flask import request, jsonify # type: ignore
 from worker import queue_task
 from database import db_pool
+import re
+
+def add_links(conn, topic_id, summary):
+    print("adding links")
+    pattern = r'<a>(.*?)</a>'
+    links = re.findall(pattern, summary)
+    
+    with conn.cursor() as cursor:
+        for dest_topic in links:
+            print(dest_topic)
+            # Check if the destination topic exists
+            cursor.execute("SELECT topic_id FROM Topics WHERE topic LIKE %s", (dest_topic,))
+            dest_topic_id = cursor.fetchone()
+            
+            # If the destination topic doesn't exist, create it
+            if not dest_topic_id:
+                cursor.execute("INSERT INTO Topics (topic, link_count) VALUES (%s, 0)", (dest_topic,))
+                conn.commit()
+                dest_topic_id = cursor.lastrowid
+            else:
+                dest_topic_id = dest_topic_id[0]
+
+            # Add connection from source topic to destination topic in Links table
+            cursor.execute("INSERT INTO Links (source_id, destination_id) VALUES (%s, %s)", (topic_id, dest_topic_id))
+            conn.commit()
+
+            cursor.execute("UPDATE Topics SET link_count = link_count + 1 WHERE topic_id LIKE %s", (dest_topic_id,))
+            conn.commit()
+
 
 def generate_summary(word):
     messages = [
@@ -53,29 +82,37 @@ def setup_routes(app):
             with db_pool.get_connection() as conn:
                 with conn.cursor() as cursor:
 
-                    query = "SELECT summary, section_title, section_content,section_order  FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s"
+                    query = "SELECT section_title, section_content, section_order, Topics.topic_id FROM Topics LEFT OUTER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s ORDER BY section_order"
                     cursor.execute(query, (word,))
                     rows = cursor.fetchall()
-                    if rows:
+                    if rows and rows[0][0]:
                         response_object = {"summary": "", "sections": []}
-                        response_object["summary"] = rows[0][0]
-                        for row in rows:
-                            response_object["sections"].append({"title": row[1], "content": row[2]})
+                        response_object["summary"] = rows[0][1]
+                        for row in rows[1:]:
+                            response_object["sections"].append({"title": row[0], "content": row[1]})
                         return jsonify({"response": response_object})
+
                     else:
                         response = generate_summary(word)
                         if response is None:
-                            return get_summary(word)
-
-                        cursor.execute("INSERT INTO Topics (topic, summary) VALUES (%s, %s)", (word, response["summary"]))
-                        topic_id = cursor.lastrowid
+                            return jsonify("Loading")
+                        topic_id = 0
+                        if rows:
+                            topic_id = rows[0][3]
+                            cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
+                                            (topic_id, "Summary", response["summary"], 0))
+                        else:
+                            cursor.execute("INSERT INTO Topics (topic) VALUES (%s)", (word,))
+                            topic_id = cursor.lastrowid
+                            cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
+                                            (topic_id, "Summary", response["summary"], 0))
 
                         i = 1
                         for section in response["sections"]:
                             cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
                                             (topic_id, section["title"], "", i))
                             i += 1
-
+                        add_links(conn, topic_id, response["summary"])
                         conn.commit()
                         return jsonify({"response": response})
         else:
