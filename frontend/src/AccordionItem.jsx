@@ -26,7 +26,7 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
         setSection(prevSection => ({ ...prevSection, loading: true }));
 
         // Make API call
-        const response = await axios.post(apiEndpoint+'${topic}/get-section/${section.title}');
+        const response = await axios.post(apiEndpoint+topic+'/get-section/'+section.title);
         const responseContent = response.data.response; // Extract section content from API response
 
         setSection(prevSection => ({ ...prevSection, content: responseContent, loading: false }));

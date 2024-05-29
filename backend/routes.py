@@ -60,10 +60,10 @@ def generate_summary(word):
         
     return response_object
 
-def generate_section_content(word, section, summary):
+def generate_section_content(word, section):
     messages = [
-        {"role": "system", "content": "You are a wikipedia bot that gives me just a detailed wiki section of whatever **word** with summary and section topic I say. You will wrap any words in the section that should link to other wiki pages with empty <a> tags with no href."},
-        {"role": "user", "content": "Word: " + word + ", Summary: " + summary + ", Section Title: " + section},
+        {"role": "system", "content": "You are a wikipedia bot that gives me just a detailed wiki section of whatever **word** and section topic I say. You will wrap any words in the section that should link to other wiki pages with empty <a> tags with no href."},
+        {"role": "user", "content": "Word: " + word + ", Section Title: " + section},
     ]
     
     response = queue_task(messages)
@@ -123,16 +123,17 @@ def setup_routes(app):
         if request.method == 'POST':
             with db_pool.get_connection() as conn:
                 with conn.cursor() as cursor:
-
-                    query = "SELECT summary, section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
+                    print(word)
+                    print(section)
+                    query = "SELECT section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
                     cursor.execute(query, (word, section))
                     rows = cursor.fetchall()
-                    if rows[0][2]:
-                        response_object = {"title": section, "content": rows[0][2]}
+                    if rows and rows[0][1]:
+                        response_object = {"title": section, "content": rows[0][1]}
                         return jsonify({"response": response_object})
                     else:
-                        response = generate_section_content(word, section, rows[0][2])
-                        cursor.execute("UPDATE Sections SET section_content = %s WHERE section_id = %s", (response, rows[0][3]))
+                        response = generate_section_content(word, section)
+                        cursor.execute("UPDATE Sections SET section_content = %s WHERE section_id = %s", (response, rows[0][2]))
 
                         conn.commit()
                         return jsonify({"response": response})
