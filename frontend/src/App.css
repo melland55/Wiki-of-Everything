@@ -10,6 +10,7 @@
 .custom-header {
   display: flex;
   justify-content: space-between;
+  height: 80px;
   align-items: center;
   background-color: #fff;
   padding: 10px 10px;
@@ -155,4 +156,52 @@ h2 {
   /* Remove the styles causing the light blue highlighting */
   outline: none;
   box-shadow: none;
+}
+
+.hamburger-menu {
+  position: absolute;
+  background-color: white; /* Adjust background color as needed */
+  border: 1px solid #ccc; /* Add border for styling */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+  z-index: 999; /* Ensure it overlays other elements */
+}
+
+.hamburger-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hamburger-menu ul li {
+  padding: 10px;
+}
+
+.hamburger-menu ul li a {
+  text-decoration: none;
+  color: #333; /* Adjust link color */
+}
+
+.hamburger-menu ul li a:hover {
+  color: #666; /* Adjust link hover color */
+}
+
+/* Hide Sidebar on Small Screens */
+@media screen and (max-width: 401px) {
+  .navbar-logo {
+    display: none;
+  }
+}
+
+.map-header {
+  width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 10px;
+  border-bottom: 1px solid #ddd;
+
+  margin-left: auto;
+  margin-right: auto;
 }

@@ -17,8 +17,14 @@ function App() {
   const { topic } = useParams(); //For Topic of current page
   const sectionRefs = useRef([]); //Ref to scroll to sections
   const [activeSection, setActiveSection] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
+
+  // Function to toggle hamburger menu visibility
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const handleScroll = () => {
     if (sectionRefs.current.length === 0) {
@@ -161,7 +167,8 @@ function App() {
     <div className="wiki-page">
       <header className="custom-header">
         <div className="logo-container">
-          <a href="/">
+          <img src="/hamburgerMenu.svg" alt="Your Logo" style={{ width: '28px', height: 'auto', marginRight: '15px', cursor: 'pointer' }} onClick={toggleMenu} />
+          <a className="navbar-logo" href="/">
             <img src="/logo.svg" alt="Your Logo" style={{ width: '64px', height: 'auto' }}/>
           </a>
         </div>
@@ -169,6 +176,18 @@ function App() {
             <SearchBar items={topics}/>
         </div>
       </header>
+      {isMenuOpen && (
+        <div className="hamburger-menu">
+          <ul>
+            <li>
+              <a href="/map">Map of Everything</a>
+            </li>
+            <li>
+              <a href="/">About page</a>
+            </li>
+          </ul>
+        </div>
+      )}
       <div className="content">
         <div className="sidebar">
           <div className="sidebar-content">
