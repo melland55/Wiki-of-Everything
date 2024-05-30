@@ -160,6 +160,7 @@ h2 {
 
 .hamburger-menu {
   position: absolute;
+  top: 80px;
   background-color: white; /* Adjust background color as needed */
   border: 1px solid #ccc; /* Add border for styling */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
