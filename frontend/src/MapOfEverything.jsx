@@ -39,8 +39,8 @@ function MapOfEverything() {
 
 
   return (
-    <div className="wiki-page">
-      <header className="custom-header">
+    <div className="map-page">
+      <header className="map-header">
         <div className="logo-container">
           <a href="/">
             <img src="/logo.svg" alt="Your Logo" style={{ width: '64px', height: 'auto' }}/>
@@ -50,7 +50,7 @@ function MapOfEverything() {
             <SearchBar items={topics}/>
         </div>
       </header>
-      <div className="content">
+      <div className="map-content">
         {graphData ? (
              <ForceGraph2D
                 graphData={graphData}
