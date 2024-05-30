@@ -104,8 +104,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const topics_response = await axios.get(apiEndpoint+'get-topics');
-        setTopics(topics_response.data.response.flatMap(topicArr => topicArr));
         const summary_response = await axios.post(apiEndpoint+'get-summary/'+topic);
         const summary_responseData = summary_response.data.response;
         setSummary(summary_responseData.summary);
