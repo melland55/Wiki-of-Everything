@@ -37,8 +37,6 @@
   padding: 0;
 }
 
-
-
 /* Fixed Font Sizes for Titles */
 h1 {
   font-size: 48px; /* Fixed font size */
@@ -53,7 +51,25 @@ h2 {
 }
 
 
+.accordion-body {
+  padding: 0;
+}
 
+.accordion-header {
+  padding: 0;
+  border-bottom: 1px solid #AAA;
+}
+
+.accordion-button {
+  font-size: 1.5rem;
+  padding-left: 0;
+}
+
+/* Custom Accordion Button Styles */
+.accordion-button:not(.collapsed) {
+  background-color: #fff;
+  color: #000;
+}
 
 
 
