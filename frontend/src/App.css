@@ -6,50 +6,9 @@
   max-width: 1000px;
 }
 
-/* Header Styles */
-.custom-header {
-  display: flex;
-  justify-content: space-between;
-  height: 80px;
-  align-items: center;
-  background-color: #fff;
-  padding: 10px 10px;
-  border-bottom: 1px solid #ddd;
-}
 
-.logo-container {
-  flex-grow: 0;
-  margin-right: 40px;
-}
 
-.navigation-container {
-  display: flex;
-  align-items: center;
-}
 
-.main-menu {
-  margin-right: 20px;
-}
-
-.main-menu ul,
-.user-menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.main-menu li,
-.user-menu li {
-  display: inline-block;
-  margin-right: 15px;
-}
-
-.search-bar {
-  flex-grow: 1;
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-}
 
 /* Sidebar Styles */
 .content {
@@ -57,29 +16,7 @@
   border-bottom: 0;
 }
 
-.sidebar {
-  width: 140px;
-  padding: 20px 10px;
-  border-right: 1px solid #ddd;
-}
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  padding-left: 10px;
-}
-
-.sidebar li {
-  margin-bottom: none;
-  padding: none;
-  height: 20px;
-  height: auto;
-}
-
-.sidebar a {
-  text-decoration: none;
-  color: black;
-}
 
 /* Remove Underline from Links Rendered with dangerouslySetInnerHTML */
 .main-content a {
@@ -100,32 +37,7 @@
   padding: 0;
 }
 
-.accordion-body {
-  padding: 0;
-}
 
-.accordion-header {
-  padding: 0;
-  border-bottom: 1px solid #AAA;
-}
-
-.accordion-button {
-  font-size: 1.5rem;
-  padding-left: 0;
-}
-
-/* Custom Accordion Button Styles */
-.accordion-button:not(.collapsed) {
-  background-color: #fff;
-  color: #000;
-}
-
-/* Hide Sidebar on Small Screens */
-@media screen and (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
-}
 
 /* Fixed Font Sizes for Titles */
 h1 {
@@ -140,58 +52,11 @@ h2 {
   margin: 0;
 }
 
-.sidebar-content {
-  position: sticky;
-  top: 0;
-}
 
-.sidebar-title {
-  vertical-align: bottom;
-  display: table-cell;
-  border-bottom: 1px solid #ddd;
-}
 
-.accordion-button:focus,
-.accordion-button:active {
-  /* Remove the styles causing the light blue highlighting */
-  outline: none;
-  box-shadow: none;
-}
 
-.hamburger-menu {
-  position: absolute;
-  top: 80px;
-  background-color: white; /* Adjust background color as needed */
-  border: 1px solid #ccc; /* Add border for styling */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
-  z-index: 999; /* Ensure it overlays other elements */
-}
 
-.hamburger-menu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
 
-.hamburger-menu ul li {
-  padding: 10px;
-}
-
-.hamburger-menu ul li a {
-  text-decoration: none;
-  color: #333; /* Adjust link color */
-}
-
-.hamburger-menu ul li a:hover {
-  color: #666; /* Adjust link hover color */
-}
-
-/* Hide Sidebar on Small Screens */
-@media screen and (max-width: 401px) {
-  .navbar-logo {
-    display: none;
-  }
-}
 
 .map-header {
   width: 1000px;

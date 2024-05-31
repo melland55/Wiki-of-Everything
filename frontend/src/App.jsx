@@ -13,7 +13,7 @@ import './App.css';
 function App() {
   const [summary, setSummary] = useState(''); //For Topic summary
   const [sections, setSections] = useState([]); //For section titles and contents
-  const [isControlled, setIsControlled] = useState([]);
+  const [isControlled, setIsControlled] = useState([]); //Used for allowing toggle of accordion items
   const { topic } = useParams(); //For Topic of current page
   const sectionRefs = useRef([]); //Ref to scroll to sections
 
@@ -41,24 +41,6 @@ function App() {
       });
     }
   };
-
-  const handleLinkClick = (title) => {
-    if(window.location.hash.substring(1).replace(/%20/g, ' ') === title){
-      const hash = window.location.hash;
-      const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
-      let index = -1;
-      sections.forEach((section, idx) => {
-        if (section.title.toLowerCase() === hashtag.toLowerCase()) {
-          index = idx;
-          return;
-        }
-      });
-      scrollToItem(index); // Scroll to the appropriate section
-    }else{
-      window.location.hash = `#${title}`; // Update the URL hash
-    }
-  };
-  
 
   useEffect(() => {
     sectionRefs.current = Array(sections.length).fill(null).map((_, index) => sectionRefs.current[index]);
@@ -122,7 +104,7 @@ function App() {
       <NavBar/>
       
       <div className="content">
-        <SideBar sections={sections} sectionRefs={sectionRefs} handleLinkClick={handleLinkClick} />
+        <SideBar sections={sections} sectionRefs={sectionRefs} scrollToItem={scrollToItem} />
         <div className="main-content">
           <div className="main-content-title">
             <h1 className="main-title-text">{capitalizeString(topic)}</h1>

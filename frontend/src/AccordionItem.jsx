@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { modifyATags, addBulletPoints, capitalizeString } from './utils';
+import './AccordionItem.css';
 
 function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const [section, setSection] = useState(section_prop);

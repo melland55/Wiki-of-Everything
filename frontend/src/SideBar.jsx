@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import './SideBar.css';
 
-import SearchBar from './SearchBar';
-
-const SideBar = ({sections, sectionRefs, handleLinkClick}) => {
+const SideBar = ({sections, sectionRefs, scrollToItem}) => {
     const [activeSection, setActiveSection] = useState(null);
     const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
 
@@ -20,7 +18,6 @@ const SideBar = ({sections, sectionRefs, handleLinkClick}) => {
           };
         });
       
-        
         // Find the section closest to the top of the viewport
         const closestSection = sectionTops.reduce((prev, curr) => {
           return Math.abs(curr.top) < Math.abs(prev.top) ? curr : prev;
@@ -42,6 +39,23 @@ const SideBar = ({sections, sectionRefs, handleLinkClick}) => {
           window.removeEventListener('scroll', handleScroll);
         };
       }, [sections]);
+
+      const handleLinkClick = (title) => {
+        if(window.location.hash.substring(1).replace(/%20/g, ' ') === title){
+          const hash = window.location.hash;
+          const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
+          let index = -1;
+          sections.forEach((section, idx) => {
+            if (section.title.toLowerCase() === hashtag.toLowerCase()) {
+              index = idx;
+              return;
+            }
+          });
+          scrollToItem(index); // Scroll to the appropriate section
+        }else{
+          window.location.hash = `#${title}`; // Update the URL hash
+        }
+      };
 
     return (
         <div className="sidebar">

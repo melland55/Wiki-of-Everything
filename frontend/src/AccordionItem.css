@@ -1,0 +1,26 @@
+.accordion-button:focus,
+.accordion-button:active {
+  /* Remove the styles causing the light blue highlighting */
+  outline: none;
+  box-shadow: none;
+}
+
+.accordion-body {
+    padding: 0;
+  }
+  
+  .accordion-header {
+    padding: 0;
+    border-bottom: 1px solid #AAA;
+  }
+  
+  .accordion-button {
+    font-size: 1.5rem;
+    padding-left: 0;
+  }
+  
+  /* Custom Accordion Button Styles */
+  .accordion-button:not(.collapsed) {
+    background-color: #fff;
+    color: #000;
+  }
