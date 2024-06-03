@@ -10,11 +10,10 @@ const SearchBar = ({ items }) => {
     item.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Handle submit of search bar Form
   const handleSubmit = e => {
     e.preventDefault(); // Prevent default form submission behavior
-    // Construct the URL with the search term
     const url = `${window.location.origin}/${encodeURIComponent(searchTerm)}`;
-    // Navigate to the URL
     window.location.href = url;
   };
   
@@ -36,7 +35,6 @@ const SearchBar = ({ items }) => {
           top: '100%',
           left: 0,
           zIndex: 999,
-          backgroundColor: '#fff',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           width: '100%',
           maxHeight: '200px',

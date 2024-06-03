@@ -61,12 +61,12 @@ function App() {
     fetchData();
     return () => {
     };
-  }, [topic]);
+  });
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
+      const hashtag = hash.substring(1).replace(/%20/g, ' ');
       let index = -1;
       sections.forEach((section, idx) => {
         if (section.title.toLowerCase() === hashtag.toLowerCase()) {
@@ -80,7 +80,7 @@ function App() {
     const handleHashReload = () => {
       const hash = window.location.hash;
       if(hash){
-        const hashtag = hash.substring(1).replace(/%20/g, ' '); // Remove '#' from the hash
+        const hashtag = hash.substring(1).replace(/%20/g, ' ');
         let index = -1;
         sections.forEach((section, idx) => {
           if (section.title.toLowerCase() === hashtag.toLowerCase()) {

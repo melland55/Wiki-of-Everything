@@ -5,11 +5,11 @@ import './NavBar.css';
 import SearchBar from './SearchBar';
 
 const NavBar = () => {
-    const [topics, setTopics] = useState([]); //For Search bar results
+    const [topics, setTopics] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
 
-    // Function to toggle hamburger menu visibility
+    // Toggle hamburger menu visibility
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -26,7 +26,7 @@ const NavBar = () => {
         fetchData();
             return () => {
         };
-    }, []);
+    });
 
     return (
         <header className="custom-header">

@@ -1,55 +1,54 @@
-/* Header Styles */
 .custom-header {
-    display: flex;
-    justify-content: space-between;
-    height: 80px;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px 10px;
-    border-bottom: 1px solid #ddd;
-  }
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 10px;
+  border-bottom: 1px solid #ddd;
+}
   
 .navigation-container {
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
+}
 
-  .logo-container {
-    flex-grow: 0;
-    margin-right: 40px;
-  }
+.logo-container {
+  flex-grow: 0;
+  margin-right: 40px;
+}
 
 .hamburger-menu {
-    position: absolute;
-    top: 80px;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-  }
+  position: absolute;
+  top: 80px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
   
-  .hamburger-menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
+.hamburger-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
   
-  .hamburger-menu ul li {
-    padding: 10px;
-  }
+.hamburger-menu ul li {
+  padding: 10px;
+}
+
+.hamburger-menu ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.hamburger-menu ul li a:hover {
+  color: #666;
+}
   
-  .hamburger-menu ul li a {
-    text-decoration: none;
-    color: #333;
+/* Hide Logo on very small Screens */
+@media screen and (max-width: 401px) {
+  .navbar-logo {
+    display: none;
   }
-  
-  .hamburger-menu ul li a:hover {
-    color: #666;
-  }
-  
-  /* Hide Logo on very small Screens */
-  @media screen and (max-width: 401px) {
-    .navbar-logo {
-      display: none;
-    }
-  }
+}

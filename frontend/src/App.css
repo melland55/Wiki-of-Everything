@@ -1,4 +1,3 @@
-/* Base Styles */
 .wiki-page {
   font-family: Arial, sans-serif;
   margin: 0 auto;
@@ -6,38 +5,28 @@
   max-width: 1000px;
 }
 
-
-
-
-
-/* Sidebar Styles */
 .content {
   display: flex;
   border-bottom: 0;
 }
-
-
 
 /* Remove Underline from Links Rendered with dangerouslySetInnerHTML */
 .main-content a {
   text-decoration: none;
 }
 
-/* Main Content Styles */
 .main-content {
   padding: 20px;
   flex: 1;
   margin-bottom: 100vh;
 }
 
-/* Accordion Styles */
 .accordion {
   border-radius: 0;
   --bs-border-width: 0;
   padding: 0;
 }
 
-/* Fixed Font Sizes for Titles */
 h1 {
   font-size: 48px; /* Fixed font size */
   font-family: "Times New Roman", Times, serif;
@@ -49,7 +38,6 @@ h2 {
   font-family: "Times New Roman", Times, serif;
   margin: 0;
 }
-
 
 .accordion-body {
   padding: 0;
@@ -65,14 +53,10 @@ h2 {
   padding-left: 0;
 }
 
-/* Custom Accordion Button Styles */
 .accordion-button:not(.collapsed) {
   background-color: #fff;
   color: #000;
 }
-
-
-
 
 .map-header {
   width: 1000px;
