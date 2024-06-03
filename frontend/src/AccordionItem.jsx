@@ -7,6 +7,8 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const [isOpen, setIsOpen] = useState(section.content.length > 1);
   const buttonRef = useRef(null);
 
+  const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
+
   // Update the internal state when the controlled prop changes
   useEffect(() => {
     if(!isOpen && isScrolledTo){
@@ -20,16 +22,14 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const handleAccordionOpen = async () => {
     if (!section.content && !section.loading) {
       try {
-        // Set loading state for the section
         setSection(prevSection => ({ ...prevSection, loading: true }));
 
-        // Make API call
-        const response = await axios.post(`${window.location.origin}/api/${topic}/get-section/${section.title}`);
-        const responseContent = response.data.response; // Extract section content from API response
+        const response = await axios.post(apiEndpoint+topic+'/get-section/'+section.title);
+        const responseContent = response.data.response;
 
         setSection(prevSection => ({ ...prevSection, content: responseContent, loading: false }));
       } catch (error) {
-        // Optionally handle error state
+        
       }
     }
   };
