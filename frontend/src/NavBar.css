@@ -6,6 +6,9 @@
   background-color: #fff;
   padding: 10px 10px;
   border-bottom: 1px solid #ddd;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
   
 .navigation-container {
@@ -40,6 +43,14 @@
 .hamburger-menu ul li a {
   text-decoration: none;
   color: #333;
+}
+
+.hamburger-menu ul li button {
+  text-decoration: none;
+  color: #333;
+  border: none;
+  background: none;
+  padding: 0px;
 }
 
 .hamburger-menu ul li a:hover {

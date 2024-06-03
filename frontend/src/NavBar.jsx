@@ -18,7 +18,7 @@ const NavBar = () => {
         const fetchData = async () => {
             try {
                 const topics_response = await axios.get(apiEndpoint+'get-topics');
-                setTopics(topics_response.data.response.flatMap(topicArr => topicArr));
+                setTopics(topics_response.data.response);
             } catch (error) {
                 console.error('Error fetching Search Bar data:', error);
             }
@@ -29,6 +29,20 @@ const NavBar = () => {
         // eslint-disable-next-line
     }, []);
 
+    const handleRandomTopicClick = () => {
+        const establishedArticles = topics.filter(topic => topic[1] === 1).map(topic => topic[0]);
+        const randomIndex = Math.floor(Math.random() * establishedArticles.length);
+        const randomTopic = establishedArticles[randomIndex];
+        window.location.href = `/${randomTopic}`; // Redirect to random topic page
+    };
+
+    const handleNewTopicClick = () => {
+        const establishedArticles = topics.filter(topic => topic[1] === 0).map(topic => topic[0]);
+        const randomIndex = Math.floor(Math.random() * establishedArticles.length);
+        const randomTopic = establishedArticles[randomIndex];
+        window.location.href = `/${randomTopic}`; // Redirect to random topic page
+    };
+
     return (
         <header className="custom-header">
         <div className="logo-container">
@@ -38,13 +52,19 @@ const NavBar = () => {
             </a>
         </div>
         <div className="navigation-container">
-            <SearchBar items={["Test"]}/>
+            <SearchBar items={topics.map(item => item[0])}/>
         </div>
         {isMenuOpen && (
             <div className="hamburger-menu">
                 <ul>
                     <li>
                         <a href="/map">Map of Everything</a>
+                    </li>
+                    <li>
+                        <button onClick={handleRandomTopicClick}>Random Article</button>
+                    </li>
+                    <li>
+                        <button onClick={handleNewTopicClick}>New Article</button>
                     </li>
                     <li>
                         <a href="/">About page</a>

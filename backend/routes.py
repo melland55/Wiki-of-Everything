@@ -146,7 +146,7 @@ def setup_routes(app):
             with db_pool.get_connection() as conn:
                 with conn.cursor() as cursor:
 
-                    query = "SELECT topic FROM Topics"
+                    query = "SELECT topic, CASE WHEN section_content IS NOT NULL THEN 1 ELSE 0 END AS has_summary FROM topics LEFT OUTER JOIN Sections ON Topics.topic_id=Sections.topic_id AND Sections.section_title='Summary'"
                     cursor.execute(query)
                     rows = cursor.fetchall()
                     
