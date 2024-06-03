@@ -26,7 +26,8 @@ const NavBar = () => {
         fetchData();
             return () => {
         };
-    });
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <header className="custom-header">
@@ -37,7 +38,7 @@ const NavBar = () => {
             </a>
         </div>
         <div className="navigation-container">
-            <SearchBar items={topics}/>
+            <SearchBar items={["Test"]}/>
         </div>
         {isMenuOpen && (
             <div className="hamburger-menu">

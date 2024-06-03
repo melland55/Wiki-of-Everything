@@ -25,7 +25,8 @@ function MapOfEverything() {
       fetchData();
       return () => {
       };
-    });
+      // eslint-disable-next-line
+    }, []);
 
     function nodePaint({ id, x, y }, ctx) {
       const color = "green";

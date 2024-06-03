@@ -33,7 +33,8 @@ const SideBar = ({sections, sectionRefs, scrollToItem}) => {
         return () => {
           window.removeEventListener('scroll', handleScroll);
         };
-      });
+        // eslint-disable-next-line
+      }, [sections]);
 
       const handleLinkClick = (title) => {
         if(window.location.hash.substring(1).replace(/%20/g, ' ') === title){

@@ -61,7 +61,8 @@ function App() {
     fetchData();
     return () => {
     };
-  });
+    // eslint-disable-next-line
+  }, [topic]);
 
   useEffect(() => {
     const handleHashChange = () => {
