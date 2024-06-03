@@ -3,32 +3,24 @@ from worker import queue_task
 from database import db_pool
 import re
 
-def add_links(conn, topic_id, summary):
-    print("adding links")
+def add_links(cursor, topic_id, summary):
     pattern = r'<a>(.*?)</a>'
     links = re.findall(pattern, summary)
-    
-    with conn.cursor() as cursor:
-        for dest_topic in links:
-            print(dest_topic)
-            # Check if the destination topic exists
-            cursor.execute("SELECT topic_id FROM Topics WHERE topic LIKE %s", (dest_topic,))
-            dest_topic_id = cursor.fetchone()
-            
-            # If the destination topic doesn't exist, create it
-            if not dest_topic_id:
-                cursor.execute("INSERT INTO Topics (topic, link_count) VALUES (%s, 0)", (dest_topic,))
-                conn.commit()
-                dest_topic_id = cursor.lastrowid
-            else:
-                dest_topic_id = dest_topic_id[0]
+    for dest_topic in links:
+        # Check if the destination topic exists
+        cursor.execute("SELECT topic_id FROM Topics WHERE topic LIKE %s", (dest_topic,))
+        dest_topic_id = cursor.fetchone()
+        
+        # If the destination topic doesn't exist, create it
+        if not dest_topic_id:
+            cursor.execute("INSERT INTO Topics (topic, link_count) VALUES (%s, 0)", (dest_topic,))
+            dest_topic_id = cursor.lastrowid
+        else:
+            dest_topic_id = dest_topic_id[0]
 
-            # Add connection from source topic to destination topic in Links table
-            cursor.execute("INSERT INTO Links (source_id, destination_id) VALUES (%s, %s)", (topic_id, dest_topic_id))
-            conn.commit()
-
-            cursor.execute("UPDATE Topics SET link_count = link_count + 1 WHERE topic_id LIKE %s", (dest_topic_id,))
-            conn.commit()
+        # Add connection from source topic to destination topic in Links table
+        cursor.execute("INSERT INTO Links (source_id, destination_id) VALUES (%s, %s)", (topic_id, dest_topic_id))
+        cursor.execute("UPDATE Topics SET link_count = link_count + 1 WHERE topic_id LIKE %s", (dest_topic_id,))
 
 
 def generate_summary(word):
@@ -67,7 +59,6 @@ def generate_section_content(word, section):
     ]
     
     response = queue_task(messages)
-    print(response)
     content_start = response.find("**"+ section +"**")
     if content_start != -1:
         content_start += len("**" + section + "**")
@@ -79,64 +70,74 @@ def setup_routes(app):
     @app.route('/get-summary/<word>', methods=['POST'])
     def get_summary(word):
         if request.method == 'POST':
-            with db_pool.get_connection() as conn:
-                with conn.cursor() as cursor:
+            conn = db_pool.get_connection()
+            cursor = conn.cursor()
+            query = "SELECT section_title, section_content, section_order, Topics.topic_id FROM Topics LEFT OUTER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s ORDER BY section_order"
+            cursor.execute(query, (word,))
+            rows = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            if rows and rows[0][0]:
+                response_object = {"summary": "", "sections": []}
+                response_object["summary"] = rows[0][1]
+                for row in rows[1:]:
+                    response_object["sections"].append({"title": row[0], "content": row[1]})
+                return jsonify({"response": response_object})
 
-                    query = "SELECT section_title, section_content, section_order, Topics.topic_id FROM Topics LEFT OUTER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s ORDER BY section_order"
-                    cursor.execute(query, (word,))
-                    rows = cursor.fetchall()
-                    if rows and rows[0][0]:
-                        response_object = {"summary": "", "sections": []}
-                        response_object["summary"] = rows[0][1]
-                        for row in rows[1:]:
-                            response_object["sections"].append({"title": row[0], "content": row[1]})
-                        return jsonify({"response": response_object})
+            else:
+                response = generate_summary(word)
+                if response is None:
+                    return jsonify("Loading")
+                
+                conn = db_pool.get_connection()
+                cursor = conn.cursor()
 
-                    else:
-                        response = generate_summary(word)
-                        if response is None:
-                            return jsonify("Loading")
-                        topic_id = 0
-                        if rows:
-                            topic_id = rows[0][3]
-                            cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
-                                            (topic_id, "Summary", response["summary"], 0))
-                        else:
-                            cursor.execute("INSERT INTO Topics (topic) VALUES (%s)", (word,))
-                            topic_id = cursor.lastrowid
-                            cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
-                                            (topic_id, "Summary", response["summary"], 0))
+                topic_id = 0
+                if rows:
+                    topic_id = rows[0][3]
+                    cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
+                                    (topic_id, "Summary", response["summary"], 0))
+                else:
+                    cursor.execute("INSERT INTO Topics (topic) VALUES (%s)", (word,))
+                    topic_id = cursor.lastrowid
+                    cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
+                                    (topic_id, "Summary", response["summary"], 0))
 
-                        i = 1
-                        for section in response["sections"]:
-                            cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
-                                            (topic_id, section["title"], "", i))
-                            i += 1
-                        add_links(conn, topic_id, response["summary"])
-                        conn.commit()
-                        return jsonify({"response": response})
+                i = 1
+                for section in response["sections"]:
+                    cursor.execute("INSERT INTO Sections (topic_id, section_title, section_content, section_order) VALUES (%s, %s, %s, %s)",
+                                    (topic_id, section["title"], "", i))
+                    i += 1
+                add_links(cursor, topic_id, response["summary"])
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return jsonify({"response": response})
         else:
             return jsonify({'error': 'Invalid request method'})
 
     @app.route('/<word>/get-section/<section>', methods=['POST'])
     def get_section(word, section):
         if request.method == 'POST':
-            with db_pool.get_connection() as conn:
-                with conn.cursor() as cursor:
-                    print(word)
-                    print(section)
-                    query = "SELECT section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
-                    cursor.execute(query, (word, section))
-                    rows = cursor.fetchall()
-                    if rows and rows[0][1]:
-                        response_object = {"title": section, "content": rows[0][1]}
-                        return jsonify({"response": response_object})
-                    else:
-                        response = generate_section_content(word, section)
-                        cursor.execute("UPDATE Sections SET section_content = %s WHERE section_id = %s", (response, rows[0][2]))
-
-                        conn.commit()
-                        return jsonify({"response": response})
+            conn = db_pool.get_connection()
+            cursor = conn.cursor()
+            query = "SELECT section_title, section_content, section_id FROM Topics INNER JOIN Sections ON Topics.topic_id=Sections.topic_id WHERE Topics.topic LIKE %s AND Sections.section_title=%s"
+            cursor.execute(query, (word, section))
+            rows = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            if rows and rows[0][1]:
+                response_object = {"title": section, "content": rows[0][1]}
+                return jsonify({"response": response_object})
+            else:
+                response = generate_section_content(word, section)
+                conn = db_pool.get_connection()
+                cursor = conn.cursor()
+                cursor.execute("UPDATE Sections SET section_content = %s WHERE section_id = %s", (response, rows[0][2]))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return jsonify({"response": response})
         else:
             return jsonify({'error': 'Invalid request method'})
         
@@ -159,7 +160,6 @@ def setup_routes(app):
         if request.method == 'GET':
             with db_pool.get_connection() as conn:
                 with conn.cursor() as cursor:
-
                     query = "SELECT topic_id, topic, link_count FROM Topics"
                     cursor.execute(query)
                     rows = cursor.fetchall()
