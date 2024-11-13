@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { modifyATags, addBulletPoints, capitalizeString } from './utils';
+import { modifyATags, addBulletPoints, capitalizeString, addBold } from './utils';
 
 function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const [section, setSection] = useState(section_prop);
   const [isOpen, setIsOpen] = useState(section.content.length > 1);
   const buttonRef = useRef(null);
+
+  const apiEndpoint = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : window.location.origin + '/api/';
 
   // Update the internal state when the controlled prop changes
   useEffect(() => {
@@ -20,16 +22,14 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const handleAccordionOpen = async () => {
     if (!section.content && !section.loading) {
       try {
-        // Set loading state for the section
         setSection(prevSection => ({ ...prevSection, loading: true }));
 
-        // Make API call
-        const response = await axios.post(`${window.location.origin}/api/${topic}/get-section/${section.title}`);
-        const responseContent = response.data.response; // Extract section content from API response
+        const response = await axios.post(apiEndpoint+topic+'/get-section/'+section.title);
+        const responseContent = response.data.response;
 
         setSection(prevSection => ({ ...prevSection, content: responseContent, loading: false }));
       } catch (error) {
-        // Optionally handle error state
+        
       }
     }
   };
@@ -50,7 +50,7 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
       </h2>
       <div id={`panelsStayOpen-collapse-${index}`} className={`accordion-collapse collapse ${section.content && isOpen ? 'show' : ''}`} aria-labelledby={`panelsStayOpen-heading-${index}`}>
         <div className="accordion-body">
-          {section.loading ? 'Loading...' : <p dangerouslySetInnerHTML={{ __html: addBulletPoints(modifyATags(section.content))}} />}
+          {section.loading ? 'Loading...' : <p dangerouslySetInnerHTML={{ __html: addBold(addBulletPoints(modifyATags(section.content)))}} />}
         </div>
       </div>
     </div>
