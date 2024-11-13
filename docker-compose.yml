@@ -1,15 +1,14 @@
-version: '3.8'
-
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.react
     ports:
-      - "80:80" # Forward port 80 for the nginx server
+      - "80:80"
     depends_on:
       - backend
-    env_file: backend/.env
+    env_file:
+      - backend/.env
     volumes:
       - ./frontend:/frontend
 
@@ -18,10 +17,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile.python
     ports:
-      - "5000:5000" # Forward port 5000 for the Flask server
+      - "5000:5000"
     depends_on:
       - database
-    env_file: backend/.env
+    env_file:
+      - backend/.env
     deploy:
       resources:
         reservations:
@@ -34,13 +34,16 @@ services:
     restart: on-failure
 
   database:
-    image: mysql/mysql-server # Use the latest MySQL Docker image
-    environment:
-      MYSQL_ROOT_PASSWORD: root # Set the root password for MySQL
-      MYSQL_DATABASE: WikiOfEverything # Set the name of your database
-      MYSQL_ROOT_HOST: '%'
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.mysql
+    env_file:
+      - ./backend/.env
     ports:
-      - "3306:3306" # Forward port 3306 for MySQL
-    volumes:
-      - ./backend/sql/INIT.SQL:/docker-entrypoint-initdb.d/init.sql
+      - "3306:3306"
     command: ['mysqld', '--bind-address=0.0.0.0']
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
