@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ForceGraph2D from 'react-force-graph-2d';
-import NavBar from './NavBar';
 
 function MapOfEverything() {
     const [graphData, setGraphData] = useState();
@@ -36,7 +35,6 @@ function MapOfEverything() {
 
   return (
     <div className="map-page">
-      <NavBar/>
       <div className="map-content">
         {graphData ? (
           <ForceGraph2D
