@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { modifyATags, addBulletPoints, capitalizeString } from './utils';
+import { modifyATags, addBulletPoints, capitalizeString, addBold } from './utils';
 
 function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
   const [section, setSection] = useState(section_prop);
@@ -50,7 +50,7 @@ function AccordionItem({ topic, section_prop, index, isScrolledTo}) {
       </h2>
       <div id={`panelsStayOpen-collapse-${index}`} className={`accordion-collapse collapse ${section.content && isOpen ? 'show' : ''}`} aria-labelledby={`panelsStayOpen-heading-${index}`}>
         <div className="accordion-body">
-          {section.loading ? 'Loading...' : <p dangerouslySetInnerHTML={{ __html: addBulletPoints(modifyATags(section.content))}} />}
+          {section.loading ? 'Loading...' : <p dangerouslySetInnerHTML={{ __html: addBold(addBulletPoints(modifyATags(section.content)))}} />}
         </div>
       </div>
     </div>

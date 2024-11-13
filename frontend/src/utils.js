@@ -12,6 +12,11 @@ export function addBulletPoints(inputString) {
     return modifiedString;
 }
 
+export function addBold(inputString) {
+    const regex = /\*\*(.*?)\*\*/g;
+    const modifiedString = inputString.replace(regex, '<b>$1</b>');
+    return modifiedString;
+}
 
 export function capitalizeString(inputString) {
 const excludedWords = ['of', 'the', 'for', 'in', 'and', 'or', 'but', 'with'];
