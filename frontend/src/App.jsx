@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AccordionItem from './AccordionItem';
-import NavBar from './NavBar';
 import SideBar from './SideBar';
 import { useParams } from 'react-router-dom';
 import { modifyATags, capitalizeString, addBulletPoints, addBold } from './utils';
@@ -102,7 +101,6 @@ function App() {
 
   return (
     <div className="wiki-page">
-      <NavBar/>
       
       <div className="content">
         <SideBar sections={sections} sectionRefs={sectionRefs} scrollToItem={scrollToItem} />
