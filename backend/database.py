@@ -2,14 +2,14 @@ import mysql.connector # type: ignore
 import mysql.connector.pooling # type: ignore
 import os
 
-# MySQL configuration
+is_dev_mode = os.getenv('IS_DEV_MODE', 'false').lower() == 'true'
+
+print(is_dev_mode)
 mysql_config = {
-    #'host': os.getenv('MYSQL_HOST'),
-    #'host': 'host.docker.internal',
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'root',
-    'database': 'WikiOfEverything'
+    'host': 'localhost' if is_dev_mode else 'host.docker.internal',
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'database': os.getenv('MYSQL_DATABASE'),
 }
 
 # Create a connection pool
