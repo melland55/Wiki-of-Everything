@@ -1,0 +1,7 @@
+FROM mysql/mysql-server
+
+COPY ./sql/INIT.SQL /docker-entrypoint-initdb.d/init.sql
+
+ENV MYSQL_ROOT_HOST=172.18.0.1
+
+CMD ["mysqld", "--host-cache-size=0"]
