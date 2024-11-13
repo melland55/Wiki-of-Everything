@@ -4,7 +4,7 @@ import AccordionItem from './AccordionItem';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import { useParams } from 'react-router-dom';
-import { modifyATags, capitalizeString, addBulletPoints } from './utils';
+import { modifyATags, capitalizeString, addBulletPoints, addBold } from './utils';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css';
@@ -110,7 +110,7 @@ function App() {
           <div className="main-content-title">
             <h1 className="main-title-text">{capitalizeString(topic)}</h1>
           </div>
-          <p dangerouslySetInnerHTML={{ __html: addBulletPoints(modifyATags(summary)) }} />
+          <p dangerouslySetInnerHTML={{ __html: addBold(addBulletPoints(modifyATags(summary))) }} />
 
           {sections.length > 0 ? (
             <div className="accordion accordion-flush">
